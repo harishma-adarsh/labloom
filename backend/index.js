@@ -85,4 +85,11 @@ app.get('/', (req, res) => {
 });
 
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
+// Export the app for Vercel
+module.exports = app;
+
+// Only start the server if this file is run directly (not imported as a module by Vercel)
+if (require.main === module) {
+    server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+}
