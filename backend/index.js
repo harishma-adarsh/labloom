@@ -53,43 +53,18 @@ app.get('/', (req, res) => {
     res.json({
         message: 'Laablume API is running...',
         version: '1.0.0',
-        documentation: 'https://github.com/your-username/laablume-backend',
-        endpoints: {
-            auth: [
-                'POST /api/auth/request-otp',
-                'POST /api/auth/verify-otp'
-            ],
-            doctors: [
-                'GET /api/doctors',
-                'GET /api/doctors/:id',
-                'POST /api/doctors/profile (Protected)'
-            ],
-            labs: [
-                'GET /api/labs',
-                'GET /api/labs/:id/tests',
-                'POST /api/labs/tests (Protected)'
-            ],
-            bookings: [
-                'POST /api/bookings (Protected)',
-                'GET /api/bookings/my (Protected)',
-                'PUT /api/bookings/:id (Protected)'
-            ],
-            admin: [
-                'GET /api/admin/analytics (Admin Only)',
-                'GET /api/admin/pending (Admin Only)',
-                'PUT /api/admin/approve/:type/:id (Admin Only)'
-            ]
-        },
-        vercel_deployment_note: 'To host on Vercel, ensure vercel.json is present and MONGODB_URI is set in environment variables.'
+        environment: process.env.NODE_ENV || 'development',
+        database_status: mongoose.connection.readyState === 1 ? 'connected' : 'disconnected',
+        vercel_deployment_note: 'Ensure MONGODB_URI and JWT_SECRET are set in Vercel settings.'
     });
 });
-
-const PORT = process.env.PORT || 5000;
 
 // Export the app for Vercel
 module.exports = app;
 
-// Only start the server if this file is run directly (not imported as a module by Vercel)
+// Only start the server and WebSockets if this file is run directly (local dev)
 if (require.main === module) {
+    const PORT = process.env.PORT || 5000;
     server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
+
